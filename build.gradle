@@ -1,0 +1,45 @@
+group 'cohttp'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    ext.kotlin_version = '1.1.3'
+
+    repositories {
+        mavenLocal()
+        maven{ url 'http://172.16.5.35:8081/nexus/content/groups/public/' }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+sourceCompatibility = 1.7
+
+repositories {
+    mavenLocal()
+    maven{ url 'http://172.16.5.35:8081/nexus/content/groups/public/' }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
+
+    testCompile 'junit:junit:4.12'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.6"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.6"
+}
+
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
+}
