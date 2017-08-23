@@ -6,6 +6,16 @@ Type-safe HTTP client use `coroutine` for Android and Kotlin by WINSION.
 
 CoHttp API is very close to [Retrofit](https://github.com/square/retrofit), so Retrofit users can easy to accept it.
 
+## Usage
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        compile 'net.winsion:cohttp:0.12'
+    }
+
 ## Introduction
 CoHttp turns your HTTP API into a kotlin interface and all your API should declared to `suspend function` in kotlin.
 

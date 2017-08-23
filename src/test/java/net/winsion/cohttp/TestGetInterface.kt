@@ -3,7 +3,7 @@ package net.winsion.cohttp
 import net.winsion.cohttp.markers.Path
 import net.winsion.cohttp.markers.QueryMap
 import net.winsion.cohttp.markers.GET
-import winsion.net.kotlinandroid.cohttp.markers.Query
+import net.winsion.cohttp.markers.Query
 
 interface TestGetInterface {
     @GET("/get")

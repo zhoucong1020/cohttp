@@ -3,7 +3,6 @@ package net.winsion.cohttp
 import net.winsion.cohttp.markers.*
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import winsion.net.kotlinandroid.cohttp.markers.Query
 
 interface TestPostInterface {
     @FormUrlEncoded
