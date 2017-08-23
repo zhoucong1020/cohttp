@@ -2,8 +2,6 @@ package net.winsion.cohttp
 
 import net.winsion.cohttp.markers.*
 import okhttp3.*
-import winsion.net.kotlinandroid.cohttp.markers.GET
-import winsion.net.kotlinandroid.cohttp.markers.Query
 import java.lang.reflect.Method
 import java.net.URLEncoder
 

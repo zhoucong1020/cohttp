@@ -3,9 +3,6 @@ package net.winsion.cohttp;
 import kotlin.coroutines.experimental.Continuation;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.ResponseBody;
-import winsion.net.kotlinandroid.cohttp.CoHttpBuilder;
-import winsion.net.kotlinandroid.cohttp.RequestBaseImpl;
 
 import java.lang.reflect.*;
 import java.util.List;

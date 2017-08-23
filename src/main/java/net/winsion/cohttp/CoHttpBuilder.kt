@@ -1,9 +1,5 @@
-package winsion.net.kotlinandroid.cohttp
+package net.winsion.cohttp
 
-import net.winsion.cohttp.CoHttp
-import net.winsion.cohttp.ConverterFactory
-import net.winsion.cohttp.ResponseBodyConverterFactory
-import net.winsion.cohttp.StringConverterFactory
 import okhttp3.OkHttpClient
 
 /**
