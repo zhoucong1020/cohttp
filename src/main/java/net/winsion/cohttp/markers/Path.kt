@@ -1,6 +1,6 @@
 package net.winsion.cohttp.markers
 
-annotation class Field(
-        val value: String,
+annotation class Path(
+        val value: String = "",
         val encoded: Boolean = false
 )

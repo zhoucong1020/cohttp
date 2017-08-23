@@ -1,6 +1,5 @@
 package net.winsion.cohttp.markers
 
-annotation class Field(
-        val value: String,
+annotation class FieldMap(
         val encoded: Boolean = false
 )
