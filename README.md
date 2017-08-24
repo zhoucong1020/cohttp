@@ -11,9 +11,21 @@ CoHttp API is very close to [Retrofit](https://github.com/square/retrofit), so R
     repositories {
         jcenter()
     }
-
+        
     dependencies {
         compile 'net.winsion:cohttp:0.12'
+    }
+    
+You should add another dependency in android project:
+
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.18"
+
+Now you can make request like this
+
+    launch(UI) {
+        val someInterface = coHttp.create(SomeInterface::class.java)
+        val result = someInterface.getSomeString()
+        tv_hello.text = result
     }
 
 ## Introduction

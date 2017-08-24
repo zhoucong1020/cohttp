@@ -13,7 +13,7 @@ import kotlin.coroutines.experimental.suspendCoroutine
 class RequestBaseImpl(
         val client: OkHttpClient
 ) {
-    private val io = Executors.newSingleThreadExecutor()
+    private val io = Executors.newCachedThreadPool()
 
     suspend fun <T> coroutineRequest(request: Request, converter: Converter<ResponseBody, T>): T? {
         return suspendCoroutine { continuation ->
