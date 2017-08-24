@@ -24,7 +24,7 @@ class RequestBuilder(
         resolveParameter()
     }
 
-    fun build(baseUrl: String, args: Array<Any>): Request {
+    fun build(baseUrl: String, args: Array<Any>, converterFactories: List<ConverterFactory>): Request {
         val sb = StringBuilder()
         sb.append(baseUrl)
         sb.append(url)
@@ -57,6 +57,24 @@ class RequestBuilder(
                 Request.Builder()
                         .url(sb.toString())
                         .post(buildRequestBody(args))
+                        .build()
+            }
+            "PUT" -> {
+                Request.Builder()
+                        .url(sb.toString())
+                        .put(buildRequestBody(args))
+                        .build()
+            }
+            "DELETE" -> {
+                Request.Builder()
+                        .url(sb.toString())
+                        .delete(buildRequestBody(args))
+                        .build()
+            }
+            "HEAD" -> {
+                Request.Builder()
+                        .url(sb.toString())
+                        .head()
                         .build()
             }
             else -> {

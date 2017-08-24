@@ -1,6 +1,6 @@
 # CoHttp
 [![Building](https://img.shields.io/badge/building-passing-brightgreen.svg)]()
-[![Coverage](https://img.shields.io/badge/coverage-84%25-green.svg)]()
+[![Coverage](https://img.shields.io/badge/coverage-90%25-green.svg)]()
 
 Type-safe HTTP client use `coroutine` for Android and Kotlin by WINSION.
 

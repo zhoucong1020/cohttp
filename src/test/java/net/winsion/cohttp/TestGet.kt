@@ -2,6 +2,8 @@ package net.winsion.cohttp
 
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
+import net.winsion.cohttp.support.GsonConverterFactory
+import net.winsion.cohttp.support.TestGetInterface
 import okhttp3.OkHttpClient
 import org.junit.Assert
 import org.junit.Before
