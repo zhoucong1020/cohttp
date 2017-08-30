@@ -31,11 +31,10 @@ class CoHttpBuilder {
     }
 
     fun build(): CoHttp {
-        client?.let {
+        if (client == null) {
             client = OkHttpClient()
         }
 
-        val coHttp = CoHttp(baseUrl, client!!, converterFactories)
-        return coHttp
+        return CoHttp(baseUrl, client!!, converterFactories)
     }
 }

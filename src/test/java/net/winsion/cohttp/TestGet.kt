@@ -5,6 +5,7 @@ import kotlinx.coroutines.experimental.launch
 import net.winsion.cohttp.support.GsonConverterFactory
 import net.winsion.cohttp.support.TestGetInterface
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -190,6 +191,22 @@ class TestGet {
         launch(CommonPool) {
             val mockObject = cohttp.create(TestGetInterface::class.java).getWithQueryResponseMockObject("test")
             Assert.assertEquals("ok", mockObject.message)
+        }
+
+        Thread.sleep(1000)
+    }
+
+    @Test
+    fun testInterceptor() {
+        val cohttp = CoHttp.builder()
+                .baseUrl("http://localhost:5000")
+                .client(OkHttpClient.Builder()
+                        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)).build())
+                .addConverterFactory(GsonConverterFactory())
+                .build()
+
+        launch(CommonPool) {
+            Assert.assertEquals(expected, cohttp.create(TestGetInterface::class.java).get())
         }
 
         Thread.sleep(1000)
