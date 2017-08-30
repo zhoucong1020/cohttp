@@ -17,7 +17,7 @@ class ServiceMethod {
     private RequestBaseImpl base;
     private List<ConverterFactory> converterFactories;
 
-    private Class responseType;
+    private Type responseType;
 
     ServiceMethod(Method method, String baseUrl, RequestBaseImpl base, List<ConverterFactory> converterFactories) {
         this.method = method;
@@ -42,20 +42,19 @@ class ServiceMethod {
 
     private void resolveResponseType() {
         Type[] genericParameterTypes = method.getGenericParameterTypes();
-        responseType = (Class) (
-                (WildcardType) (
-                        (ParameterizedType) genericParameterTypes[genericParameterTypes.length - 1]
-                ).getActualTypeArguments()[0]
-        ).getLowerBounds()[0];
+
+        ParameterizedType parameterizedType = (ParameterizedType) genericParameterTypes[genericParameterTypes.length - 1];
+        WildcardType wildcardType = (WildcardType) (parameterizedType).getActualTypeArguments()[0];
+        responseType = wildcardType.getLowerBounds()[0];
     }
 
-    private Converter findConverter(Class type, Annotation[] annotations) {
+    private Converter findConverter(Type type, Annotation[] annotations) {
         for (ConverterFactory converterFactory : converterFactories) {
             Converter converter = converterFactory.responseBodyConverter(type, annotations);
             if (converter != null) {
                 return converter;
             }
         }
-        throw new RuntimeException("no converter for type " + responseType.getName());
+        throw new RuntimeException("no converter for type " + responseType.toString());
     }
 }

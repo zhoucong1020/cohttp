@@ -13,7 +13,8 @@ class GsonConverterFactory : ConverterFactory {
     override fun responseBodyConverter(type: Type, annotations: Array<Annotation>): Converter<ResponseBody, *>? {
         return object : Converter<ResponseBody, Any> {
             override fun convert(value: ResponseBody): Any {
-                return gson.fromJson(value.string(), type)
+                val json = value.string()
+                return gson.fromJson(json, type)
             }
         }
     }
