@@ -1,4 +1,5 @@
 # CoHttp
+[![Current](https://img.shields.io/badge/current-0.16-blue.svg)](https://bintray.com/winsion/maven/CoHttp)
 [![Building](https://img.shields.io/badge/building-passing-brightgreen.svg)]()
 [![Coverage](https://img.shields.io/badge/coverage-90%25-green.svg)]()
 
@@ -9,11 +10,13 @@ CoHttp API is very close to [Retrofit](https://github.com/square/retrofit), so R
 ## Usage
 
     repositories {
-        jcenter()
+        maven {
+            url  "https://winsion.bintray.com/maven" 
+        }
     }
         
     dependencies {
-        compile 'net.winsion:cohttp:0.12'
+        compile 'net.winsion:cohttp:0.16'
     }
     
 You should add another dependency in android project:
@@ -91,12 +94,15 @@ Form-encoded data is sent when `@FormUrlEncoded` is present on the method. Each 
     @POST("user/edit")
     String updateUser(@Field("first_name") String first, @Field("last_name") String last);
     
-## 2.3 multipart (*)
+## 2.3 multipart
 Multipart requests are used when `@Multipart` is present on the method. Parts are declared using the `@Part` annotation.
 
     @Multipart
     @PUT("user/photo")
-    User updateUser(@Part("photo") RequestBody photo, @Part("description") RequestBody description);
+    User updateUser(
+        @Part("name=\"file\";filename=\"file.jpg\"") file: RequestBody,
+        @Part("description") RequestBody description
+    );
 
 ## 3.1 static header (*)
 You can set static headers for a method using the @Headers annotation.
