@@ -1,5 +1,5 @@
 # CoHttp
-[![Current](https://img.shields.io/badge/current-0.16-blue.svg)](https://bintray.com/winsion/maven/CoHttp)
+[![Current](https://img.shields.io/badge/current-0.17-blue.svg)](https://bintray.com/winsion/maven/CoHttp)
 [![Building](https://img.shields.io/badge/building-passing-brightgreen.svg)]()
 [![Coverage](https://img.shields.io/badge/coverage-90%25-green.svg)]()
 
@@ -16,7 +16,7 @@ CoHttp API is very close to [Retrofit](https://github.com/square/retrofit), so R
     }
         
     dependencies {
-        compile 'net.winsion:cohttp:0.16'
+        compile 'net.winsion:cohttp:0.17'
     }
     
 You should add another dependency in android project:
