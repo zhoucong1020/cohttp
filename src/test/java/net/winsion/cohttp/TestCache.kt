@@ -2,54 +2,106 @@ package net.winsion.cohttp
 
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
-import net.winsion.cohttp.support.TestGetInterface
 import okhttp3.OkHttpClient
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Rule
+import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Test
-import org.mockserver.client.server.MockServerClient
-import org.mockserver.junit.MockServerRule
-import org.mockserver.model.HttpRequest
-import org.mockserver.model.HttpResponse
 
 class TestCache {
-    @get:Rule
-    var server = MockServerRule(this, 5000)
-
-    val expected = "{ message: 'ok' }"
-
-    @Before
-    fun initMock() {
-        val mockClient = MockServerClient("localhost", 5000)
-
-        mockClient.`when`(
-                HttpRequest.request()
-                        .withPath("/get")
-                        .withMethod("GET")
-        ).respond(
-                HttpResponse.response()
-                        .withStatusCode(200)
-                        .withBody(expected)
-        )
-    }
-
     @Test
     fun test() {
+        val client = OkHttpClient.Builder()
+                .addInterceptor(HttpLoggingInterceptor())
+                .build()
+
         val cohttp = CoHttp.builder()
-                .baseUrl("http://localhost:5000")
-                .client(OkHttpClient())
+                .baseUrl("https://api.douban.com")
+                .client(client)
+                .addConverterFactory(GsonConverterFactory())
                 .build()
 
         launch(CommonPool) {
-            val testGetInterface = cohttp.create(TestGetInterface::class.java)
-
-            Assert.assertEquals(expected, testGetInterface.get())
-            Assert.assertEquals(expected, testGetInterface.get())
-            Assert.assertEquals(expected, testGetInterface.get())
-            Assert.assertEquals(expected, testGetInterface.get())
+            val book = cohttp.create(API::class.java).book("1220562")
+            println(book.pubdate)
         }
 
-        Thread.sleep(1000)
+        Thread.sleep(5000)
     }
+
+    @Test
+    fun testCancelableRequest() {
+        val client = OkHttpClient.Builder()
+                .addInterceptor(HttpLoggingInterceptor())
+                .build()
+
+        val cohttp = CoHttp.builder()
+                .baseUrl("https://api.douban.com")
+                .client(client)
+                .addConverterFactory(GsonConverterFactory())
+                .build()
+
+        launch(CommonPool) {
+            val request = cohttp.create(API::class.java).bookCancelableRequest("1220562")
+            Thread(Runnable {
+                Thread.sleep(10)
+                request.cancel()
+            }).start()
+            try {
+                val book = request.call()
+                println(book)
+            } catch (e: Exception) {
+                println(e.message)
+            }
+        }
+
+        Thread.sleep(5000)
+    }
+
+    @Test
+    fun testException() {
+        val client = OkHttpClient.Builder()
+                .addInterceptor(HttpLoggingInterceptor())
+                .build()
+
+        val cohttp = CoHttp.builder()
+                .baseUrl("https://api.douba123123n.com")
+                .client(client)
+                .addConverterFactory(GsonConverterFactory())
+                .build()
+
+        launch(CommonPool) {
+            try {
+                val book = cohttp.create(API::class.java).book("1220562")
+                println(book.pubdate)
+            } catch (e: Exception) {
+                println(e.message)
+            }
+        }
+
+        Thread.sleep(5000)
+    }
+
+    @Test
+    fun testResponseData() {
+        val client = OkHttpClient.Builder()
+                .addInterceptor(HttpLoggingInterceptor())
+                .build()
+
+        val cohttp = CoHttp.builder()
+                .baseUrl("http://mobile-api.tlbl.winsion.net")
+                .client(client)
+                .addConverterFactory(GsonConverterFactory())
+                .build()
+
+        launch(CommonPool) {
+            val request = cohttp.create(API::class.java).getCurrentTrainMessageV3Cancelable()
+            val result = request.call()
+            println(result!!.success)
+            println(result!!.code)
+            println(result!!.message)
+        }
+
+        Thread.sleep(5000)
+    }
+
+
 }

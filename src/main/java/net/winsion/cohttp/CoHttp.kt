@@ -1,5 +1,6 @@
 package winsion.net.kotlinandroid.cohttp
 
+import net.winsion.cohttp.CoHttpBuilder
 import okhttp3.OkHttpClient
 
 /**

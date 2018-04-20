@@ -24,24 +24,26 @@ class RequestBuilder(
         resolveParameter()
     }
 
-    fun build(baseUrl: String, args: Array<Any>, converterFactories: List<ConverterFactory>): Request {
+    fun build(baseUrl: String, args: Array<Any>?, converterFactories: List<ConverterFactory>): Request {
         val sb = StringBuilder()
         sb.append(baseUrl)
         sb.append(url)
-        pathParameter.forEach {
-            val start = sb.indexOf(it.pattern)
-            if (start > 0) {
-                sb.replace(start, start + it.pattern.length, encode(args[it.index], it.encoded))
+        if (args != null) {
+            pathParameter.forEach {
+                val start = sb.indexOf(it.pattern)
+                if (start > 0) {
+                    sb.replace(start, start + it.pattern.length, encode(args[it.index], it.encoded))
+                }
             }
-        }
-        queryParameter.forEach {
-            if (!it.isMap) {
-                addQuery(sb, it.name, encode(args[it.index], it.encoded))
-            } else {
-                val arg = args[it.index]
-                if (arg is Map<*, *>) {
-                    arg.forEach { key, value ->
-                        addQuery(sb, key.toString(), encode(value!!, it.encoded))
+            queryParameter.forEach {
+                if (!it.isMap) {
+                    addQuery(sb, it.name, encode(args[it.index], it.encoded))
+                } else {
+                    val arg = args[it.index]
+                    if (arg is Map<*, *>) {
+                        arg.forEach { key, value ->
+                            addQuery(sb, key.toString(), encode(value!!, it.encoded))
+                        }
                     }
                 }
             }
@@ -83,52 +85,54 @@ class RequestBuilder(
         }
     }
 
-    private fun buildRequestBody(args: Array<Any>): RequestBody? {
-        if (isFormUrlEncoded) {
-            val builder = FormBody.Builder()
-            fieldParameter.forEach {
-                if (!it.isMap) {
-                    builder.add(it.name, encode(args[it.index], it.encoded))
-                } else {
-                    val arg = args[it.index]
-                    if (arg is Map<*, *>) {
-                        arg.forEach { key, value ->
-                            builder.add(key.toString(), encode(value!!, it.encoded))
-                        }
-                    }
-                }
-            }
-            return builder.build()
-        }
-        if (isMultipart) {
-            val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
-            partParameter.forEach {
-                if (!it.isMap) {
-                    val arg = args[it.index]
-                    if (arg is RequestBody) {
-                        builder.addPart(
-                                Headers.of("Content-Disposition", "form-data; ${it.header}"),
-                                arg
-                        )
-                    }
-                } else {
-                    val arg = args[it.index]
-                    if (arg is Map<*, *>) {
-                        arg.forEach { key, value ->
-                            if (value is RequestBody) {
-                                builder.addPart(
-                                        Headers.of("Content-Disposition", "form-data; $key"),
-                                        value
-                                )
+    private fun buildRequestBody(args: Array<Any>?): RequestBody {
+        if (args != null) {
+            if (isFormUrlEncoded) {
+                val builder = FormBody.Builder()
+                fieldParameter.forEach {
+                    if (!it.isMap) {
+                        builder.add(it.name, encode(args[it.index], it.encoded))
+                    } else {
+                        val arg = args[it.index]
+                        if (arg is Map<*, *>) {
+                            arg.forEach { key, value ->
+                                builder.add(key.toString(), encode(value!!, it.encoded))
                             }
                         }
                     }
                 }
+                return builder.build()
             }
-            return builder.build()
+            if (isMultipart) {
+                val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
+                partParameter.forEach {
+                    if (!it.isMap) {
+                        val arg = args[it.index]
+                        if (arg is RequestBody) {
+                            builder.addPart(
+                                    Headers.of("Content-Disposition", "form-data; ${it.header}"),
+                                    arg
+                            )
+                        }
+                    } else {
+                        val arg = args[it.index]
+                        if (arg is Map<*, *>) {
+                            arg.forEach { key, value ->
+                                if (value is RequestBody) {
+                                    builder.addPart(
+                                            Headers.of("Content-Disposition", "form-data; $key"),
+                                            value
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                return builder.build()
+            }
         }
 
-        return null
+        return FormBody.Builder().build()
     }
 
     private fun resolveBasic() {
